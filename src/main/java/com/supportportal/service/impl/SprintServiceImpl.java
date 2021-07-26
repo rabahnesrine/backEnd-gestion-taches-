@@ -5,7 +5,10 @@ import com.supportportal.domain.Sprint;
 import com.supportportal.domain.User;
 import com.supportportal.enumeration.ETAT;
 import com.supportportal.repository.SprintRepository;
+import com.supportportal.service.ProjetService;
 import com.supportportal.service.SprintService;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,8 +21,10 @@ public class SprintServiceImpl implements SprintService {
 
     private SprintRepository sprintRepository;
 
+@Autowired
     public SprintServiceImpl(SprintRepository sprintRepository) {
         this.sprintRepository = sprintRepository;
+
     }
 
 
@@ -45,8 +50,8 @@ public class SprintServiceImpl implements SprintService {
 
     @Override
     public Sprint addNewSprint(long idSprint, String nomSprint, Date dateFin, String description, String etatSprint, Projet projet, User sprintCreePar, User chefAffecter) {
-       // ValidateNewnomProjet( nameProjet,creePar.getUsername());
-
+       // ValidateNameSprint(StringUtils.EMPTY, nomSprint);
+       // ValidateNameSprint(projet.getNameProjet(),nomSprint);
 Sprint newSprint = new Sprint();
 newSprint.setDateFin(dateFin);
 newSprint.setIdSprint(idSprint);
@@ -65,7 +70,10 @@ newSprint.setDateCreation (new Date());
     }
 
     @Override
-    public Sprint updateSprint(long idSprint, String nomSprint, Date dateCreation, Date dateFin, String description, String etatSprint, Projet projet, User sprintCreePar, User chefAffecter) {
+    public Sprint updateSprint(long idSprint, String nomSprint, Date dateCreation, Date dateFin, String description, String etatSprint, Projet projet, User sprintCreePar, User chefAffecter){
+     //  Sprint updatedSprint=findSprintByNomSprint(currentNomSprint);
+       // ValidateNameSprint(currentNomSprint,nomSprint);
+
         Sprint updatedSprint = new Sprint();
         updatedSprint.setDateFin(dateFin);
         updatedSprint.setIdSprint(idSprint);
@@ -81,6 +89,42 @@ updatedSprint.setDateModification(new Date());
 
 
     }
+
+    @Override
+    public Sprint findSprintByProjet(Projet projet){
+        return  sprintRepository.findSprintByProjet(projet);}
+
+  /*  private Sprint ValidateNameSprint(String currentNomSprint,String nomSprint ) throws SprintNameExistException {
+
+        Sprint sprintByNewNomSprint=findSprintByNomSprint(nomSprint);
+
+        if(StringUtils.isNotBlank(currentNomSprint)) {
+            Sprint currentSprint = findSprintByNomSprint(currentNomSprint);
+            if(currentSprint == null) {
+                throw new SprintNameExistException("NO_Projet_FOUND_BY_Name" + currentSprint);//on vera
+            }
+            Long idCurrent=currentSprint.getIdSprint();
+            Projet currentProjet=currentSprint.getProjet();
+            LOGGER.info(currentProjet.getNameProjet());
+            // Long idNew=projetByNewNomProjet.getIdProjet();
+LOGGER.info (String.valueOf(currentProjet.getNameProjet().equals(sprintByNewNomSprint.getProjet().getNameProjet())));
+            if (sprintByNewNomSprint != null && currentProjet.getNameProjet().equals(sprintByNewNomSprint.getProjet().getNameProjet()) )
+                throw new SprintNameExistException("SprintNAME_ALREADY_EXISTS-Into thisProject "); //test nom et id (a voir)
+
+            return currentSprint;
+        } else {
+            Sprint tousSprints= (Sprint) getSprints();
+            LOGGER.info(tousSprints.getProjet().getNameProjet());
+            if(sprintByNewNomSprint != null &&(sprintByNewNomSprint.getProjet().getNameProjet().equals(tousSprints.getProjet().getNameProjet()) ) ){
+                throw new SprintNameExistException("SprintNAME_ALREADY_EXISTS" ); //test nom et id (a voir)
+            }
+
+            return null;
+        }
+
+    }*/
+
+
 
 
     private ETAT getEtatEnumName(String etat) {

@@ -1,7 +1,6 @@
 package com.supportportal.resource;
 
 import com.supportportal.domain.HttpResponse;
-import com.supportportal.domain.Projet;
 import com.supportportal.domain.Sprint;
 import com.supportportal.domain.User;
 import com.supportportal.service.SprintService;
@@ -50,8 +49,8 @@ public class SprintResource {
 
 
     @PutMapping("/update/{idSprint}")
-   public ResponseEntity<Sprint> updateSprint(@PathVariable long idSprint, @RequestBody Sprint updatedSprint){
-
+   public ResponseEntity<Sprint> updateSprint(@PathVariable long idSprint, @RequestBody Sprint updatedSprint) {
+Sprint currentSprint=this.sprintService.findSprintByIdSprint(idSprint);
         updatedSprint.setIdSprint(idSprint);
         updatedSprint.setDateModification(new Date());
 
@@ -63,10 +62,7 @@ public class SprintResource {
     }
 
 
-
-
-
-    @GetMapping("/allSprints")
+    @GetMapping("/all")
     //@PreAuthorize("hasAnyAuthority('sprint:read')")
     public ResponseEntity<List<Sprint>> getSprints(){
         List<Sprint> sprints= sprintService.getSprints();
@@ -78,7 +74,7 @@ public class SprintResource {
 
     @DeleteMapping("/delete/{idSprint}")
      @PreAuthorize("hasAnyAuthority('sprint:delete')")
-    public ResponseEntity<HttpResponse> deleteProjet(@PathVariable("idSprint") long  idSprint){
+    public ResponseEntity<HttpResponse> deleteSprint(@PathVariable("idSprint") long  idSprint){
         sprintService.deleteSprint(idSprint);
         return  response(NO_CONTENT, SPRINT_DELETED_SUCCESSFULLY);
 

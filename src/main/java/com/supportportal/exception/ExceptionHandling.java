@@ -4,6 +4,7 @@ import com.auth0.jwt.exceptions.TokenExpiredException;
 import com.supportportal.domain.HttpResponse;
 import com.supportportal.exception.domain.*;
 import com.supportportal.exception.projetException.ProjetNameExistException;
+import com.supportportal.exception.projetException.ProjetNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.web.servlet.error.ErrorController;
@@ -28,7 +29,7 @@ import static org.springframework.http.HttpStatus.*;
 @RestControllerAdvice
 public class ExceptionHandling implements ErrorController {
     private final Logger LOGGER = LoggerFactory.getLogger(getClass());
-    private static final String ACCOUNT_LOCKED = "Your account has been locked. Please contact administration";
+    private static final String ACCOUNT_LOCKED = "Your account has been locked. Please contact administration: tacheapp@gmail.com";
     private static final String METHOD_IS_NOT_ALLOWED = "This request method is not allowed on this endpoint. Please send a '%s' request";
     private static final String INTERNAL_SERVER_ERROR_MSG = "An error occurred while processing the request";
     private static final String INCORRECT_CREDENTIALS = "Username / password incorrect. Please try again";
@@ -78,6 +79,7 @@ public class ExceptionHandling implements ErrorController {
     }
 
 
+
     @ExceptionHandler(EmailNotFoundException.class)
     public ResponseEntity<HttpResponse> emailNotFoundException(EmailNotFoundException exception) {
         return createHttpResponse(BAD_REQUEST, exception.getMessage());
@@ -87,6 +89,12 @@ public class ExceptionHandling implements ErrorController {
     public ResponseEntity<HttpResponse> userNotFoundException(UserNotFoundException exception) {
         return createHttpResponse(BAD_REQUEST, exception.getMessage());
     }
+
+    @ExceptionHandler(ProjetNotFoundException.class)
+    public ResponseEntity<HttpResponse> projetNotFoundException(ProjetNotFoundException exception) {
+        return createHttpResponse(BAD_REQUEST, exception.getMessage());
+    }
+
 
 //    @ExceptionHandler(NoHandlerFoundException.class)
 //    public ResponseEntity<HttpResponse> noHandlerFoundException(NoHandlerFoundException e) {

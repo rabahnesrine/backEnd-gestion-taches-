@@ -4,10 +4,12 @@ import com.supportportal.domain.Projet;
 import com.supportportal.domain.User;
 import com.supportportal.enumeration.ETAT;
 import com.supportportal.exception.projetException.ProjetNameExistException;
+import com.supportportal.exception.projetException.ProjetNotFoundException;
 import com.supportportal.repository.ProjetRepository;
 import com.supportportal.resource.UserResource;
 import com.supportportal.service.ProjetService;
 import com.supportportal.service.UserService;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,13 +51,11 @@ public class ProjetServiceImpl implements ProjetService {
     }
 
     @Override
-    public Projet addNewProjet(Long idProjet,String nameProjet,String etatProjet ,User creePar, Date dateEcheance) throws  ProjetNameExistException {
-        //User u=newprojet.getCreePar();
-     //   User user= userService.findUserByUserId(u.getUserId());
-        ValidateNewnomProjet( nameProjet,creePar.getUsername());
+    public Projet addNewProjet(Long idProjet,String nameProjet,String etatProjet ,User creePar, Date dateEcheance) throws ProjetNameExistException, ProjetNotFoundException {
+      //  ValidateNewnomProjet(nameProjet);
+       ValidateUpdateProjet(nameProjet,StringUtils.EMPTY);
 
-
-        Projet newprojet= new Projet() ;
+       Projet newprojet= new Projet() ;
     newprojet.setDateEcheance(dateEcheance);
          newprojet.setCreePar(creePar);
     newprojet.setIdProjet(idProjet);
@@ -78,7 +78,7 @@ else
     }
 
 
-    private Projet ValidateNewnomProjet( String nomProjet,String username ) throws ProjetNameExistException{
+    private Projet ValidateNewnomProjet( String nomProjet ) throws ProjetNameExistException{
         Projet newProjet=findProjetByNameProjet(nomProjet);
 
 
@@ -92,12 +92,37 @@ else
     }
 
 
+    private Projet ValidateUpdateProjet( String nomProjet,String currentNomProjet ) throws ProjetNameExistException, ProjetNotFoundException {
+
+        Projet projetByNewNomProjet=findProjetByNameProjet(nomProjet);
+        if(StringUtils.isNotBlank(currentNomProjet)) {
+            Projet currentProjet = findProjetByNameProjet(currentNomProjet);
+            if(currentProjet == null) {
+                throw new ProjetNotFoundException("NO_Projet_FOUND_BY_Name" + currentProjet);
+            }
+            Long idCurrent=currentProjet.getIdProjet();
+            // Long idNew=projetByNewNomProjet.getIdProjet();
+            if (projetByNewNomProjet != null && !idCurrent.equals(projetByNewNomProjet.getIdProjet()))
+                throw new ProjetNameExistException(PROJECTNAME_ALREADY_EXISTS); //test nom et id (a voir)
+
+            return currentProjet;
+        } else {
+            if(projetByNewNomProjet != null) {
+                throw new ProjetNameExistException(PROJECTNAME_ALREADY_EXISTS ); //test nom et id (a voir)
+            }
+
+            return null;
+        }
+
+    }
+
+
+
 
     @Override
-    public Projet updateProjet(Long idProjet,String nameProjet,String etatProjet ,User creePar,Date dateCreation, Date dateEcheance,Date dateModification) {
-        //User u=newprojet.getCreePar();
-        //   User user= userService.findUserByUserId(u.getUserId());
-        Projet newprojet= new Projet() ;
+    public Projet updateProjet(String currentNom, Long idProjet,String nameProjet,String etatProjet ,User creePar,Date dateCreation, Date dateEcheance,Date dateModification) throws ProjetNameExistException, ProjetNotFoundException {
+        Projet newprojet=findProjetByNameProjet(currentNom);
+        ValidateUpdateProjet(nameProjet,currentNom);
         newprojet.setDateEcheance(dateEcheance);
         newprojet.setCreePar(creePar);
         newprojet.setDateCreation(dateCreation);

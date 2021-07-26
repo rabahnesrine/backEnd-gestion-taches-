@@ -3,6 +3,7 @@ package com.supportportal.service;
 import com.supportportal.domain.Projet;
 import com.supportportal.domain.User;
 import com.supportportal.exception.projetException.ProjetNameExistException;
+import com.supportportal.exception.projetException.ProjetNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
@@ -15,10 +16,10 @@ public interface ProjetService {
     List<Projet> getProjets() ;
     void deleteProjet(long idProjet) ;
   //  Projet addNewProjet(Projet newprojet) ;
-    Projet addNewProjet(Long idProjet, String nameProjet, String etatProjet , User creePar , Date dateEcheance) throws ProjetNameExistException;
+    Projet addNewProjet(Long idProjet, String nameProjet, String etatProjet , User creePar , Date dateEcheance) throws ProjetNameExistException, ProjetNotFoundException;
   //  Projet updateProjet(Long currentidProjet,Projet newProjet) ;
 
-    Projet updateProjet(Long idProjet, String nameProjet, String etatProjet , User creePar ,Date dateCreation, Date dateEcheance,Date dateModification) ;
+    Projet updateProjet(String currentNom,Long idProjet, String nameProjet, String etatProjet , User creePar ,Date dateCreation, Date dateEcheance,Date dateModification) throws ProjetNameExistException, ProjetNotFoundException;
 
 
 

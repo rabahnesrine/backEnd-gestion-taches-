@@ -3,6 +3,7 @@ package com.supportportal.domain;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 public class Sprint implements Serializable {
@@ -26,6 +27,18 @@ public class Sprint implements Serializable {
     private Projet projet ;
      @ManyToOne
   private  User chefAffecter;
+
+
+    @OneToMany( mappedBy = "sprint")
+    private List<Task> tasks;
+
+    public List<Task> getTasks() {
+        return null;
+    }
+
+    public void setTasks(List<Task> tasks) {
+        this.tasks = tasks;
+    }
 //
 //  @OneToMany(cascade=CascadeType.ALL,mappedBy = "sprint")
 //  private List<Tache> taches;
@@ -100,7 +113,7 @@ public class Sprint implements Serializable {
     }
 
     public Sprint(long idSprint, String nomSprint, Date dateCreation, Date dateModification, Date dateFin,
-                  String description, String etatSprint, Projet projet,User sprintCreePar,User chefAffecter ) {
+                  String description, String etatSprint, Projet projet,User sprintCreePar,User chefAffecter ,List<Task> tasks) {
         super();
         this.idSprint = idSprint;
         this.nomSprint = nomSprint;
@@ -112,6 +125,7 @@ public class Sprint implements Serializable {
         this.projet = projet;
         this.sprintCreePar=sprintCreePar;
         this.chefAffecter=chefAffecter;
+        this.tasks=tasks;
 
     }
     public Sprint() {

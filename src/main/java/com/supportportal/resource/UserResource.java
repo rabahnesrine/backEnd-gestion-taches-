@@ -83,7 +83,7 @@ private UserRepository userRepository ;
         return new ResponseEntity<>(newUser,OK);
     }
     @PostMapping("/update")
- // @PreAuthorize("hasAnyAuthority('user:update')")
+    //@PreAuthorize("hasAnyAuthority('user:update')")
     public ResponseEntity<User> update(@RequestParam("currentNomUser") String currentNomUser,
                                        @RequestParam("username") String username,
                                        @RequestParam("email") String email,

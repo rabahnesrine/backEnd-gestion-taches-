@@ -1,6 +1,7 @@
 package com.supportportal.domain;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.supportportal.constant.Authority;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -32,15 +33,25 @@ public class User implements Serializable {
     @OneToMany(mappedBy ="creePar" )
     private List<Projet> projets;
     @OneToMany(mappedBy ="sprintCreePar" )
-
     private List<Sprint> sprints;
     @OneToMany(mappedBy ="chefAffecter" )
     private List<Sprint> sprintsAffecter;
 
+    @OneToMany( mappedBy = "memberAffecter")
+    private List<Task> tasksMember;
+
+    @OneToMany( mappedBy = "taskCreePar")
+    private List<Task> tasksChef;
+
+    @OneToMany( mappedBy = "userCom")
+    private List<Commentaire> userCom;
+
+
+
     public User(){}
 
     public User(Long id, String userId, String telephone,  String professionUser,
-            String username, String password, String email, String profileImageUrl, Date lastLoginDate, Date lastLoginDateDisplay, Date joinDate, String role, String[] authorities, boolean isActive, boolean isNotLocked, List<Projet> projets, List<Sprint> sprints, List<Sprint> sprintsAffecter) {
+            String username, String password, String email, String profileImageUrl, Date lastLoginDate, Date lastLoginDateDisplay, Date joinDate, String role, String[] authorities, boolean isActive, boolean isNotLocked, List<Projet> projets, List<Sprint> sprints, List<Sprint> sprintsAffecter ,List<Task> tasksMember ,List<Task> tasksChef,List<Commentaire> userCom) {
         this.id = id;
         this.userId = userId;
     this.telephone=telephone;
@@ -59,7 +70,34 @@ public class User implements Serializable {
         this.projets = projets;
         this.sprints=sprints;
         this.sprintsAffecter=sprintsAffecter;
+        this.tasksChef=tasksChef;
+        this.tasksMember=tasksMember;
+        this.userCom=userCom;
 
+    }
+
+    public List<Task> getTasksMember() {
+        return null;
+    }
+
+    public void setTasksMember(List<Task> tasksMember) {
+        this.tasksMember = tasksMember;
+    }
+
+    public List<Task> getTasksChef() {
+        return null;
+    }
+
+    public void setTasksChef(List<Task> tasksChef) {
+        this.tasksChef = tasksChef;
+    }
+
+    public List<Commentaire> getUserCom() {
+        return null;
+    }
+
+    public void setUserCom(List<Commentaire> userCom) {
+        this.userCom = userCom;
     }
 
     public List<Sprint> getSprintsAffecter() {

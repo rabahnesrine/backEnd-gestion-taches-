@@ -5,10 +5,15 @@ import com.supportportal.domain.HttpResponse;
 import com.supportportal.domain.Projet;
 import com.supportportal.domain.User;
 import com.supportportal.enumeration.ETAT;
+import com.supportportal.exception.domain.EmailExistException;
+import com.supportportal.exception.domain.UserNotFoundException;
+import com.supportportal.exception.domain.UsernameExistException;
 import com.supportportal.exception.projetException.ProjetNameExistException;
+import com.supportportal.exception.projetException.ProjetNotFoundException;
 import com.supportportal.service.ProjetService;
 import com.supportportal.service.UserService;
 import com.supportportal.service.impl.UserServiceImpl;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,10 +21,15 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import org.apache.commons.lang3.RandomStringUtils;
+import org.apache.commons.lang3.StringUtils;
+import  java.lang.*;
 
 import java.util.Date;
 import java.util.List;
 
+import static com.supportportal.constant.ProjetImplConstant.PROJECTNAME_ALREADY_EXISTS;
+import static com.supportportal.constant.UserImplConstant.*;
 import static org.springframework.http.HttpStatus.NO_CONTENT;
 import static org.springframework.http.HttpStatus.OK;
 
@@ -42,7 +52,7 @@ public class ProjetResource {
     }
 
     @PostMapping("/add")
-    public ResponseEntity<Projet> addNewProjet(@RequestBody Projet newprojet) throws ProjetNameExistException {
+    public ResponseEntity<Projet> addNewProjet(@RequestBody Projet newprojet) throws ProjetNameExistException, ProjetNotFoundException {
 
     User u=newprojet.getCreePar();
 
@@ -68,17 +78,49 @@ public class ProjetResource {
 
 
    @PutMapping("/update/{idProjet}")
-    public ResponseEntity<Projet> updateProjet(@PathVariable long idProjet,  @RequestBody Projet newprojet){
-      newprojet.setIdProjet(idProjet);
+    public ResponseEntity<Projet> updateProjet(@PathVariable long idProjet,  @RequestBody Projet updateProjet) throws ProjetNameExistException, ProjetNotFoundException {
+       Projet testingProj=this.projetService.findProjetByIdProjet(idProjet);
+      //  ValidateNewnomProjet(updateProjet.getNameProjet(),testingProj.getNameProjet());
 
-      newprojet.setDateModification(new Date());
-LOGGER.info(",,,,,,update "+newprojet.getCreePar().getUsername());
-      Projet updatedProjet=projetService.updateProjet(newprojet.getIdProjet(),newprojet.getNameProjet(),newprojet.getEtatProjet(),newprojet.getCreePar(),newprojet.getDateCreation(),newprojet.getDateEcheance(),newprojet.getDateModification());
+       updateProjet.setIdProjet(idProjet);
+       updateProjet.setDateModification(new Date());
+LOGGER.info(",,,,,,update "+updateProjet.getCreePar().getUsername());
+      Projet updatedProjet=projetService.updateProjet(testingProj.getNameProjet(),updateProjet.getIdProjet(),updateProjet.getNameProjet(),updateProjet.getEtatProjet(),updateProjet.getCreePar(),updateProjet.getDateCreation(),updateProjet.getDateEcheance(),updateProjet.getDateModification());
       updatedProjet.setIdProjet(idProjet);
 
        return new ResponseEntity<>(updatedProjet,OK);
 
     }
+
+    /*private Projet ValidateNewnomProjet( String nomProjet,String currentNomProjet ) throws ProjetNameExistException,ProjetNotFoundException{
+
+        Projet projetByNewNomProjet=this.projetService.findProjetByNameProjet(nomProjet);
+            if(StringUtils.isNotBlank(currentNomProjet)) {
+                Projet currentProjet = this.projetService.findProjetByNameProjet(currentNomProjet);
+                if(currentProjet == null) {
+                    throw new ProjetNotFoundException("NO_Projet_FOUND_BY_Name" + currentProjet);
+                }
+                Long idCurrent=currentProjet.getIdProjet();
+               // Long idNew=projetByNewNomProjet.getIdProjet();
+                    if (projetByNewNomProjet != null && !currentProjet.equals(projetByNewNomProjet.getIdProjet()))
+                        throw new ProjetNameExistException(PROJECTNAME_ALREADY_EXISTS); //test nom et id (a voir)
+
+                return currentProjet;
+            } else {
+                if(projetByNewNomProjet != null) {
+                    throw new ProjetNameExistException(PROJECTNAME_ALREADY_EXISTS ); //test nom et id (a voir)
+                }
+
+                return null;
+            }
+
+    }*/
+
+
+
+
+
+
   /*  @GetMapping("/Auth/{nomUser}")
     public List<Projet> ProjetByUser(@PathVariable("nomUser") String nomUser) {
 
