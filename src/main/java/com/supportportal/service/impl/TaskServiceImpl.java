@@ -4,15 +4,13 @@ import com.supportportal.domain.*;
 
 import com.supportportal.enumeration.ETAT;
 import com.supportportal.enumeration.TASKETAT;
-import com.supportportal.repository.AttachementRepository;
-import com.supportportal.repository.CommentaireRepository;
-import com.supportportal.repository.TaskRepository;
-import com.supportportal.repository.UserRepository;
+import com.supportportal.repository.*;
 import com.supportportal.service.TaskService;
 import org.springframework.beans.factory.annotation.Autowired;
 //import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -25,13 +23,17 @@ public class TaskServiceImpl implements TaskService {
 
     private CommentaireRepository commentaireRepository;
     private UserRepository userRepository;
+    private SprintRepository sprintRepository;
+    private ProjetRepository projetRepository;
 
      @Autowired
-    public TaskServiceImpl(TaskRepository taskRepository, AttachementRepository attachementRepository, CommentaireRepository commentaireRepository,UserRepository userRepository) {
+    public TaskServiceImpl(TaskRepository taskRepository,ProjetRepository projetRepository, SprintRepository sprintRepository,AttachementRepository attachementRepository, CommentaireRepository commentaireRepository,UserRepository userRepository) {
         this.taskRepository = taskRepository;
         this.attachementRepository = attachementRepository;
         this.commentaireRepository = commentaireRepository;
         this.userRepository=userRepository;
+        this.sprintRepository=sprintRepository;
+        this.projetRepository=projetRepository;
     }
 
     @Override
@@ -105,7 +107,7 @@ Task newTask = new Task();
 
     @Override
     public int getTotalTaskUnstarted() {
-        return taskRepository.getTotalTaskUnstarted();
+        return this.taskRepository.getTotalTaskUnstarted();
     }
 
     @Override
@@ -171,6 +173,63 @@ Task newTask = new Task();
     public int findTotalByMemberAffecterId(User user) {
         return taskRepository.findTotalByMemberAffecterId(user.getId());
     }
+
+    @Override
+    public int findTotalBySprintId(Sprint sprint) {
+        return taskRepository.findTotalBySprintId(sprint.getIdSprint());
+    }
+@Override
+    public int findTotalByProjetId(Projet projet){
+        Projet projetTest=this.projetRepository.findProjetByIdProjet(projet.getIdProjet());
+        List<Sprint> originalSprints=this.sprintRepository.findAll();
+        long idProjet = projetTest.getIdProjet();
+
+
+        List<Sprint> filteredListSprint=new ArrayList<>();;
+       int nbTasks=0;
+        for (Sprint sprint : originalSprints) {
+                if (sprint.getProjet().getIdProjet()==(idProjet)) {
+                    filteredListSprint.add(sprint);
+                    // break;  return filteredListSprint.size();
+                    } }
+    for (Sprint sprint : filteredListSprint) {
+
+        nbTasks += taskRepository.findTotalBySprintId(sprint.getIdSprint());
+    }
+
+
+        return nbTasks;
+    }
+
+    @Override
+    public int findTotalCompletedByProjetId(Projet projet){
+        Projet projetTest=this.projetRepository.findProjetByIdProjet(projet.getIdProjet());
+        List<Sprint> originalSprints=this.sprintRepository.findAll();
+        long idProjet = projetTest.getIdProjet();
+
+
+        List<Sprint> filteredListSprint=new ArrayList<>();;
+        int nbTasks=0;
+        for (Sprint sprint : originalSprints) {
+            if (sprint.getProjet().getIdProjet()==(idProjet)) {
+                filteredListSprint.add(sprint);
+                // break;  return filteredListSprint.size();
+            } }
+        for (Sprint sprint : filteredListSprint) {
+
+            nbTasks += taskRepository.findTotalCompletedBySprintId(sprint.getIdSprint());
+        }
+
+
+        return nbTasks;
+    }
+
+
+
+
+
+
+
 
 
 

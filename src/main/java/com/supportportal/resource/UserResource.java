@@ -1,15 +1,15 @@
 package com.supportportal.resource;
 
-import com.supportportal.domain.HttpResponse;
-import com.supportportal.domain.Projet;
-import com.supportportal.domain.User;
-import com.supportportal.domain.UserPrincipal;
+import com.supportportal.domain.*;
 import com.supportportal.exception.ExceptionHandling;
 import com.supportportal.exception.domain.*;
+import com.supportportal.repository.CalendrierRepository;
 import com.supportportal.repository.UserRepository;
+import com.supportportal.repository.eventRepository;
 import com.supportportal.service.UserService;
 import com.supportportal.utility.JWTTokenProvider;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.repository.core.support.EventPublishingRepositoryProxyPostProcessor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -26,7 +26,9 @@ import java.io.InputStream;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static com.supportportal.constant.SecurityConstant.JWT_TOKEN_HEADER;
 import static  com.supportportal.constant.FileConstant.*;
@@ -44,6 +46,10 @@ public class UserResource extends ExceptionHandling {
     private AuthenticationManager authenticationManager;
     private UserService userService;
     private JWTTokenProvider jwtTokenProvider;
+    @Autowired
+    private eventRepository eventRepository;
+    @Autowired
+    private CalendrierRepository calendrierRepository;
 
     @Autowired
 private UserRepository userRepository ;
@@ -197,5 +203,45 @@ private UserRepository userRepository ;
 
     private void authenticate(String username, String password) {
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
+    }
+
+
+    @PostMapping("/addtoCalendrier")
+    public ResponseEntity<List<Calendrier>> addtoCalendrie(@RequestBody Calendrier calendrier) {
+        Calendrier c=calendrierRepository.save(calendrier);
+        List<Calendrier> listEvtCal=calendrierRepository.findAll();
+        return new ResponseEntity<>(listEvtCal, OK);
+    }
+    @GetMapping("/listEvt")
+    public ResponseEntity<List<Calendrier>> getAllEvent(){
+        List<Calendrier> listEvt= calendrierRepository.findAll();
+        return new ResponseEntity<>(listEvt,OK);
+
+    }
+
+    @PostMapping("/addEvent")
+    public ResponseEntity<Event> addEvent(@RequestBody Event event) {
+        Event e=eventRepository.save(event);
+        return new ResponseEntity<>(e, OK);
+    }
+    @GetMapping("/getEvent/{id}")
+    public ResponseEntity<List<Event>> getEvent(@PathVariable("id") Long id) {
+        User user=userRepository.findUserById(id);
+        List<Event> listEvent=eventRepository.findAll();
+        List<Event> listEventFiltre = new ArrayList<>();
+
+
+            for (Event event : listEvent) {
+                if (event.getInvitedPersons().indexOf(id)!=-1)  {
+                    listEventFiltre.add(event);
+                    // break;  return filteredListSprint.size();
+                }
+            }
+
+
+       /* listEventFiltre=listEvent.stream()
+                .filter(e->e.getInvitedPersons().contains(user.getId()))
+                .collect(Collectors.toList());*/
+        return new ResponseEntity<>(listEventFiltre, OK);
     }
 }

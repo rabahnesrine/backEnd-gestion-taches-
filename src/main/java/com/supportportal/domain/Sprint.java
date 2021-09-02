@@ -23,13 +23,13 @@ public class Sprint implements Serializable {
     private User sprintCreePar;//recupere user a partir instance projet
 
     //    @ManyToOne
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.REFRESH)
     private Projet projet ;
      @ManyToOne
   private  User chefAffecter;
 
 
-    @OneToMany( mappedBy = "sprint")
+    @OneToMany( mappedBy = "sprint",cascade = CascadeType.ALL)
     private List<Task> tasks;
 
     public List<Task> getTasks() {

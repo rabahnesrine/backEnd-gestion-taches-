@@ -66,7 +66,7 @@ public class ProjetResource {
         LOGGER.info(",,,,,,"+getEtatEnumName(newprojet.getEtatProjet()).name());
 
 
-        Projet addedProjet=projetService.addNewProjet(newprojet.getIdProjet(),newprojet.getNameProjet(),newprojet.getEtatProjet(),newprojet.getCreePar(),newprojet.getDateEcheance());
+        Projet addedProjet=projetService.addNewProjet(newprojet.getIdProjet(),newprojet.getNameProjet(),newprojet.getEtatProjet(),newprojet.getCreePar(),newprojet.getClient(),newprojet.getDateEcheance());
         return new ResponseEntity<>(addedProjet,OK);
 
     }
@@ -85,7 +85,7 @@ public class ProjetResource {
        updateProjet.setIdProjet(idProjet);
        updateProjet.setDateModification(new Date());
 LOGGER.info(",,,,,,update "+updateProjet.getCreePar().getUsername());
-      Projet updatedProjet=projetService.updateProjet(testingProj.getNameProjet(),updateProjet.getIdProjet(),updateProjet.getNameProjet(),updateProjet.getEtatProjet(),updateProjet.getCreePar(),updateProjet.getDateCreation(),updateProjet.getDateEcheance(),updateProjet.getDateModification());
+      Projet updatedProjet=projetService.updateProjet(testingProj.getNameProjet(),updateProjet.getIdProjet(),updateProjet.getNameProjet(),updateProjet.getEtatProjet(),updateProjet.getCreePar(),updateProjet.getClient(),updateProjet.getDateCreation(),updateProjet.getDateEcheance(),updateProjet.getDateModification());
       updatedProjet.setIdProjet(idProjet);
 
        return new ResponseEntity<>(updatedProjet,OK);
@@ -178,6 +178,29 @@ LOGGER.info(",,,,,,update "+updateProjet.getCreePar().getUsername());
        // LOGGER.info("nomProjet"+ projets.getNameProjet());
         return new ResponseEntity<>(projets,OK);
     }*/
+
+
+    @GetMapping("/active")
+    public int getTotalProjetActive() {
+        return this.projetService.getTotalProjetActive();
+    }
+    @GetMapping("/paused")
+    public int getTotalProjetPaused() {
+        return this.projetService.getTotalProjetPaused() ;
+    }
+    @GetMapping("/suspended")
+    public int getTotalProjetSuspended() {
+        return this.projetService.getTotalProjetSuspended();
+    }
+    @GetMapping("/Completed")
+    public int getTotalProjetCompleted() {
+        return this.projetService.getTotalProjetCompleted();
+    }
+    @GetMapping("/totalProjet")
+    public int totalProjet() {
+        return this.projetService.totalProjet();
+    }
+
 
 
 

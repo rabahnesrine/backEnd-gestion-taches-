@@ -1,9 +1,7 @@
 package com.supportportal.resource;
 
 import com.supportportal.domain.*;
-import com.supportportal.service.CommentaireService;
-import com.supportportal.service.TaskService;
-import com.supportportal.service.UserService;
+import com.supportportal.service.*;
 import com.supportportal.service.impl.UserServiceImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,16 +26,19 @@ public class TaskResource {
     private Logger LOGGER= LoggerFactory.getLogger(UserServiceImpl.class);
 
     private TaskService taskService;
-
+    private SprintService sprintService;
+private ProjetService projetService;
     private UserService userService;
 
     private CommentaireService commentaireService;
 
 
     @Autowired
-    public TaskResource(TaskService taskService, UserService userService, CommentaireService commentaireService) {
+    public TaskResource(TaskService taskService,ProjetService projetService,SprintService sprintService, UserService userService, CommentaireService commentaireService) {
         this.taskService = taskService;
+        this.sprintService=sprintService;
         this.userService = userService;
+        this.projetService=projetService;
         this.commentaireService = commentaireService;
     }
 
@@ -209,6 +210,25 @@ LOGGER.info(commentaireService.findCommentaireByTaskId(idTask).toString());
     public int totalTacheByCreePar(@PathVariable("username") String username) {
         return taskService.findTotalByCreeParId(userService.findUserByUsername(username));
     }
+
+    @GetMapping("/totalSprintByProjet/{idProjet}")
+    public int findTotalByProjetId(@PathVariable("idProjet") Long idProjet) {
+
+        return taskService.findTotalByProjetId(projetService.findProjetByIdProjet(idProjet));
+    }
+
+    @GetMapping("/totalCompletedByProjet/{idProjet}")
+    public int findTotalCompletedByProjetId(@PathVariable("idProjet") Long idProjet) {
+
+        return taskService.findTotalCompletedByProjetId(projetService.findProjetByIdProjet(idProjet));
+    }
+
+
+    @GetMapping("/totalBySprint/{idSprint}")
+    public int totalTacheBySprint(@PathVariable("idSprint") long idSprint) {
+        return taskService.findTotalBySprintId(sprintService.findSprintByIdSprint(idSprint));
+    }
+
 
     @GetMapping("archives")
     public List<Task> getArchivedTask() {

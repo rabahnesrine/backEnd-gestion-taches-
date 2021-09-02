@@ -16,7 +16,7 @@ public class Commentaire implements Serializable {
     @Temporal(TemporalType.DATE)
     private Date dateComment;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.REFRESH)
     private Task tacheCom;
     @ManyToOne
     private User userCom;

@@ -19,19 +19,19 @@ public class Task implements Serializable {
     private Date dateFin;
     private String description;
     private String etatTask;
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.REFRESH)
     private User taskCreePar;
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.REFRESH)
     private Sprint sprint ;
     @ManyToOne
     private  User memberAffecter;
     private boolean archive;
 
 
-    @OneToMany( mappedBy = "taskAtt")
+    @OneToMany( mappedBy = "taskAtt",cascade = CascadeType.ALL)
     private List<Attachement> attachements;
 
-    @OneToMany( mappedBy = "tacheCom")
+    @OneToMany( mappedBy = "tacheCom",cascade = CascadeType.ALL)
     private List<Commentaire> commentaires;
 
 

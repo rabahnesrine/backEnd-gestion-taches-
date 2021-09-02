@@ -32,7 +32,11 @@ public class User implements Serializable {
     private boolean isNotLocked;
     @OneToMany(mappedBy ="creePar" )
     private List<Projet> projets;
-    @OneToMany(mappedBy ="sprintCreePar" )
+
+    @OneToMany(mappedBy ="client" )
+    private List<Projet> projetsClient;
+
+    @OneToMany(mappedBy ="sprintCreePar")
     private List<Sprint> sprints;
     @OneToMany(mappedBy ="chefAffecter" )
     private List<Sprint> sprintsAffecter;
@@ -43,15 +47,24 @@ public class User implements Serializable {
     @OneToMany( mappedBy = "taskCreePar")
     private List<Task> tasksChef;
 
+    @OneToMany(mappedBy ="sender" )
+    private List<Msg> msgs;
+
+    @OneToMany(mappedBy ="receiver" )
+    private List<Msg> msgsRecu;
+
+
+
     @OneToMany( mappedBy = "userCom")
     private List<Commentaire> userCom;
 
-
+    @OneToMany(mappedBy ="docUser" ,cascade = CascadeType.ALL)
+    private List<Document> documents;
 
     public User(){}
 
     public User(Long id, String userId, String telephone,  String professionUser,
-            String username, String password, String email, String profileImageUrl, Date lastLoginDate, Date lastLoginDateDisplay, Date joinDate, String role, String[] authorities, boolean isActive, boolean isNotLocked, List<Projet> projets, List<Sprint> sprints, List<Sprint> sprintsAffecter ,List<Task> tasksMember ,List<Task> tasksChef,List<Commentaire> userCom) {
+            String username, String password, String email, String profileImageUrl, Date lastLoginDate, Date lastLoginDateDisplay, Date joinDate, String role, String[] authorities, boolean isActive, boolean isNotLocked, List<Projet> projets,List<Projet> projetsClient, List<Sprint> sprints, List<Sprint> sprintsAffecter ,List<Task> tasksMember ,List<Document> documents,List<Task> tasksChef,List<Commentaire> userCom,List<Msg> msgs,List<Msg> msgsRecu) {
         this.id = id;
         this.userId = userId;
     this.telephone=telephone;
@@ -73,8 +86,36 @@ public class User implements Serializable {
         this.tasksChef=tasksChef;
         this.tasksMember=tasksMember;
         this.userCom=userCom;
-
+        this.msgs=msgs;
+        this.msgsRecu=msgsRecu;
+this.projetsClient=projetsClient;
+this.documents=documents;
     }
+
+    public List<Document> getDocuments() {
+        return null;
+    }
+
+    public void setDocuments(List<Document> documents) {
+        this.documents = documents;
+    }
+
+    public List<Msg> getMsgsRecu() {
+        return null;
+    }
+
+    public void setMsgsRecu(List<Msg> msgsRecu) {
+        this.msgsRecu = msgsRecu;
+    }
+
+    public List<Msg> getMsgs() {
+        return null;
+    }
+
+    public void setMsgs(List<Msg> msgs) {
+        this.msgs = msgs;
+    }
+
 
     public List<Task> getTasksMember() {
         return null;
@@ -242,5 +283,13 @@ public class User implements Serializable {
 
     public void setIsNotLocked(boolean notLocked) {
         this.isNotLocked = notLocked;
+    }
+
+    public List<Projet> getProjetsClient() {
+        return null;
+    }
+
+    public void setProjetsClient(List<Projet> projetsClient) {
+        this.projetsClient = projetsClient;
     }
 }

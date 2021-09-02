@@ -34,9 +34,16 @@ public interface TaskService {
 
     List<Task> findTaskByMemberAffecter(User user);
     int findTotalByMemberAffecterId(User user);
+   int findTotalBySprintId(Sprint sprint);
 
     List<Task> findTaskByArchiveTrue();
     List<Task> findTaskByArchiveFalse();
     Task findTaskByNameTask(String nameTask);
 
-}
+
+   int findTotalByProjetId(Projet projet);
+   int findTotalCompletedByProjetId(Projet projet);
+
+
+
+    }

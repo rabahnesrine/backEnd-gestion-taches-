@@ -2,6 +2,7 @@ package com.supportportal.service;
 
 import com.supportportal.domain.Projet;
 import com.supportportal.domain.Sprint;
+import com.supportportal.domain.Task;
 import com.supportportal.domain.User;
 import org.springframework.stereotype.Service;
 
@@ -12,12 +13,13 @@ import java.util.List;
 public interface SprintService {
     Sprint findSprintByNomSprint(String nomSprint) ;
     Sprint findSprintByIdSprint(long idSprint) ;
-    Sprint findSprintByProjet(Projet projet);
+    List<Sprint> findSprintByProjetId(Long idProjet);
 
     List<Sprint> getSprints();
 
     void deleteSprint(long idSprint);
    // Sprint addNewSprint(Sprint Newsprint) ;
+   int findTotalByProjetId(Projet projet);
 
 
 
@@ -28,6 +30,11 @@ Sprint updateSprint(long idSprint, String nomSprint, Date dateCreation, Date dat
                         String description, String etatSprint, Projet projet,User sprintCreePar,User chefAffecter);
 
 
+    int getTotalSprintDevelopment();
+    int getTotalSprintDelivery();
+    int getTotalSprintTesting();
+    int getTotalSprintPaused();
+    int totalSprint();
 
 
 

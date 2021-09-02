@@ -156,6 +156,9 @@ LOGGER.info(message);
         return attachementService.findAllAttachement();
     }
 
+
+
+
     @GetMapping("/task/{idTask}")
     public List<Attachement> findAttachementByTaskAtt(@PathVariable("idTask") Long idTask) {
         return attachementService.findAttachementByIdTask(idTask);

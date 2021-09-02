@@ -51,13 +51,14 @@ public class ProjetServiceImpl implements ProjetService {
     }
 
     @Override
-    public Projet addNewProjet(Long idProjet,String nameProjet,String etatProjet ,User creePar, Date dateEcheance) throws ProjetNameExistException, ProjetNotFoundException {
+    public Projet addNewProjet(Long idProjet,String nameProjet,String etatProjet ,User creePar,User client, Date dateEcheance) throws ProjetNameExistException, ProjetNotFoundException {
       //  ValidateNewnomProjet(nameProjet);
        ValidateUpdateProjet(nameProjet,StringUtils.EMPTY);
 
        Projet newprojet= new Projet() ;
     newprojet.setDateEcheance(dateEcheance);
          newprojet.setCreePar(creePar);
+         newprojet.setClient(client);
     newprojet.setIdProjet(idProjet);
     newprojet.setNameProjet(nameProjet);
         newprojet.setEtatProjet(getEtatEnumName(etatProjet).name());
@@ -120,11 +121,12 @@ else
 
 
     @Override
-    public Projet updateProjet(String currentNom, Long idProjet,String nameProjet,String etatProjet ,User creePar,Date dateCreation, Date dateEcheance,Date dateModification) throws ProjetNameExistException, ProjetNotFoundException {
+    public Projet updateProjet(String currentNom, Long idProjet,String nameProjet,String etatProjet ,User creePar,User client,Date dateCreation, Date dateEcheance,Date dateModification) throws ProjetNameExistException, ProjetNotFoundException {
         Projet newprojet=findProjetByNameProjet(currentNom);
         ValidateUpdateProjet(nameProjet,currentNom);
         newprojet.setDateEcheance(dateEcheance);
         newprojet.setCreePar(creePar);
+        newprojet.setClient(client);
         newprojet.setDateCreation(dateCreation);
         newprojet.setIdProjet(idProjet);
         newprojet.setNameProjet(nameProjet);
@@ -179,6 +181,31 @@ else
     @Override
     public Projet findProjetByCreePar(User creePar){
         return  projetRepository.findProjetByCreePar(creePar);}
+
+    @Override
+    public int getTotalProjetActive() {
+        return this.projetRepository.getTotalProjetActive();
+    }
+
+    @Override
+    public int getTotalProjetPaused() {
+        return this.projetRepository.getTotalProjetPaused();
+    }
+
+    @Override
+    public int getTotalProjetSuspended() {
+        return this.projetRepository.getTotalProjetSuspended();
+    }
+
+    @Override
+    public int getTotalProjetCompleted() {
+        return this.projetRepository.getTotalProjetCompleted();
+    }
+
+    @Override
+    public int totalProjet() {
+        return this.projetRepository.totalProjet();
+    }
 }
 
 

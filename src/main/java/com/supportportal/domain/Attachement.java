@@ -13,7 +13,7 @@ public class Attachement implements Serializable {
     @Temporal(TemporalType.DATE)
 
     private Date dateCreation;
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.REFRESH)
     private Task taskAtt;
 
     public long getIdAttachement() {

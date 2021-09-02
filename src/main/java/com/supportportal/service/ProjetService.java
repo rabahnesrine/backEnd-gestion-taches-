@@ -16,10 +16,10 @@ public interface ProjetService {
     List<Projet> getProjets() ;
     void deleteProjet(long idProjet) ;
   //  Projet addNewProjet(Projet newprojet) ;
-    Projet addNewProjet(Long idProjet, String nameProjet, String etatProjet , User creePar , Date dateEcheance) throws ProjetNameExistException, ProjetNotFoundException;
+    Projet addNewProjet(Long idProjet, String nameProjet, String etatProjet , User creePar,User client , Date dateEcheance) throws ProjetNameExistException, ProjetNotFoundException;
   //  Projet updateProjet(Long currentidProjet,Projet newProjet) ;
 
-    Projet updateProjet(String currentNom,Long idProjet, String nameProjet, String etatProjet , User creePar ,Date dateCreation, Date dateEcheance,Date dateModification) throws ProjetNameExistException, ProjetNotFoundException;
+    Projet updateProjet(String currentNom,Long idProjet, String nameProjet, String etatProjet , User creePar,User client ,Date dateCreation, Date dateEcheance,Date dateModification) throws ProjetNameExistException, ProjetNotFoundException;
 
 
 
@@ -28,7 +28,11 @@ public interface ProjetService {
     Projet findProjetByCreePar(User creePar);
 
 
-
+    int getTotalProjetActive();
+    int getTotalProjetPaused();
+    int getTotalProjetSuspended();
+    int getTotalProjetCompleted();
+    int totalProjet();
 
 //  List<Projet> findProjetByUser(User user) ;
 //Projet addNewMember(Projet projet,User user);

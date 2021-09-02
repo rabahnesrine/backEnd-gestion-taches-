@@ -21,7 +21,7 @@ public class Projet implements Serializable {
     private  Date dateEcheance;
     private String etatProjet;
 
-   @OneToMany( mappedBy = "projet")
+   @OneToMany( mappedBy = "projet",cascade = CascadeType.ALL)
     private List<Sprint> sprints;
 
       /*  private boolean archiveProjet ;
@@ -29,9 +29,10 @@ public class Projet implements Serializable {
 */
     @ManyToOne
     private User creePar;
+    @ManyToOne
+    private User client;
 
-
-    public Projet(long idProjet, String nameProjet, Date dateCreation, Date dateEcheance,Date dateModification, String etatProjet, User creePar,List<Sprint> sprints
+    public Projet(long idProjet, String nameProjet, Date dateCreation, Date dateEcheance,Date dateModification, String etatProjet, User creePar,List<Sprint> sprints,User client
                   ) {
         super();
         this.idProjet = idProjet;
@@ -42,6 +43,7 @@ public class Projet implements Serializable {
         this.dateModification = dateModification;
         this.creePar=creePar;
         this.sprints = sprints;
+        this.client=client;
 
 
 
@@ -106,8 +108,15 @@ public class Projet implements Serializable {
         this.creePar = creePar;
     }
 
+    public User getClient() {
+        return this.client;
+    }
 
-    /*
+    public void setClient(User client) {
+        this.client = client;
+    }
+
+/*
     public boolean isArchiveProjet() {
         return archiveProjet;
     }

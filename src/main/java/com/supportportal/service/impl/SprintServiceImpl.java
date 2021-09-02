@@ -1,9 +1,8 @@
 package com.supportportal.service.impl;
 
-import com.supportportal.domain.Projet;
-import com.supportportal.domain.Sprint;
-import com.supportportal.domain.User;
+import com.supportportal.domain.*;
 import com.supportportal.enumeration.ETAT;
+import com.supportportal.repository.ProjetRepository;
 import com.supportportal.repository.SprintRepository;
 import com.supportportal.service.ProjetService;
 import com.supportportal.service.SprintService;
@@ -20,6 +19,7 @@ import java.util.List;
 public class SprintServiceImpl implements SprintService {
 
     private SprintRepository sprintRepository;
+    private ProjetRepository projetRepository;
 
 @Autowired
     public SprintServiceImpl(SprintRepository sprintRepository) {
@@ -91,8 +91,41 @@ updatedSprint.setDateModification(new Date());
     }
 
     @Override
-    public Sprint findSprintByProjet(Projet projet){
-        return  sprintRepository.findSprintByProjet(projet);}
+    public int getTotalSprintDevelopment() {
+        return this.sprintRepository.getTotalSprintDevelopment();
+    }
+
+    @Override
+    public int getTotalSprintDelivery() {
+        return this.sprintRepository.getTotalSprintDelivery();
+    }
+
+    @Override
+    public int getTotalSprintTesting() {
+        return this.sprintRepository.getTotalSprintTesting();
+    }
+
+    @Override
+    public int getTotalSprintPaused() {
+        return this.sprintRepository.getTotalSprintPaused();
+    }
+
+    @Override
+    public int totalSprint() {
+        return this.sprintRepository.totalSprint();
+    }
+
+    @Override
+    public int findTotalByProjetId(Projet projet) {
+        return sprintRepository.findTotalByProjetId(projet.getIdProjet());
+    }
+    @Override
+    public List<Sprint> findSprintByProjetId(Long idProjet){
+    Projet findProjet = new Projet();
+    findProjet=projetRepository.findProjetByIdProjet(idProjet);
+        return  sprintRepository.findSprintByProjet(findProjet);}
+
+
 
   /*  private Sprint ValidateNameSprint(String currentNomSprint,String nomSprint ) throws SprintNameExistException {
 

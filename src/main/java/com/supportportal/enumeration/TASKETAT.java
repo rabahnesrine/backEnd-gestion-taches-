@@ -3,7 +3,7 @@ package com.supportportal.enumeration;
 public enum TASKETAT {
 
       TASKETAT_INPROGRESS,
-       TASKETAT_TOFINISH,
+       TASKETAT_COMPLETED,
        TASKETAT_UNSTARTED,
        TASKETAT_CANCEL;
         private String [] taskEtat;

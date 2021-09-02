@@ -11,16 +11,16 @@ public interface TaskRepository extends JpaRepository<Task,Long> {
 
 
 
-    @Query("SELECT COUNT(t.etatTask) FROM Task t WHERE t.etatTask ='Unstarted'")
+    @Query("SELECT COUNT(t.etatTask) FROM Task t WHERE t.etatTask ='TASKETAT_UNSTARTED'")
     int getTotalTaskUnstarted();
 
-    @Query("SELECT COUNT(t.etatTask) FROM Task t WHERE t.etatTask ='Cancel'")
+    @Query("SELECT COUNT(t.etatTask) FROM Task t WHERE t.etatTask ='TASKETAT_CANCEL'")
     int getTotalTaskCancel();
 
-    @Query("SELECT COUNT(t.etatTask) FROM Task t WHERE t.etatTask ='To Finish'")
+    @Query("SELECT COUNT(t.etatTask) FROM Task t WHERE t.etatTask ='TASKETAT_COMPLETED'")
     int getTotalTaskToFinish();
 
-    @Query("SELECT COUNT(t.etatTask) FROM Task t WHERE t.etatTask ='In Progress'")
+    @Query("SELECT COUNT(t.etatTask) FROM Task t WHERE t.etatTask ='TASKETAT_INPROGRESS'")
     int getTotalTaskInProgress();
 
     @Query("SELECT COUNT(t) FROM Task t WHERE t.archive=false ")
@@ -37,10 +37,20 @@ public interface TaskRepository extends JpaRepository<Task,Long> {
 
     // for member affecter
     List<Task> findTaskByMemberAffecterAndArchiveFalse(Long id);
-
+    List<Task> findTaskByMemberAffecterId(Long id);
     @Query("SELECT COUNT(t) FROM Task t WHERE t.memberAffecter.id=:id")
     int findTotalByMemberAffecterId(@Param("id") Long id);
+// nb task by projet
+//@Query("SELECT COUNT(t) FROM Task t WHERE t.sprint.projet.idProjet=:idProjet")
+//int findTotalBySprintProjetId(@Param("idProjet") Long idProjet);
 
+//nb task byy sprint
+    @Query("SELECT COUNT(t) FROM Task t WHERE t.sprint.idSprint=:idSprint")
+    int findTotalBySprintId(@Param("idSprint") Long idSprint);
+
+
+    @Query("SELECT COUNT(t) FROM Task t WHERE t.sprint.idSprint=:idSprint and t.etatTask ='TASKETAT_COMPLETED'")
+    int findTotalCompletedBySprintId(@Param("idSprint") Long idSprint);
 
 
  public Task findTaskByNameTask(String nameTask);
