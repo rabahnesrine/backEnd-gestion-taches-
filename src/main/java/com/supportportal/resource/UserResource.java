@@ -27,6 +27,7 @@ import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -206,7 +207,7 @@ private UserRepository userRepository ;
     }
 
 
-    @PostMapping("/addtoCalendrier")
+ /*   @PostMapping("/addtoCalendrier")
     public ResponseEntity<List<Calendrier>> addtoCalendrie(@RequestBody Calendrier calendrier) {
         Calendrier c=calendrierRepository.save(calendrier);
         List<Calendrier> listEvtCal=calendrierRepository.findAll();
@@ -217,10 +218,13 @@ private UserRepository userRepository ;
         List<Calendrier> listEvt= calendrierRepository.findAll();
         return new ResponseEntity<>(listEvt,OK);
 
-    }
+    }*/
 
-    @PostMapping("/addEvent")
+  /* @PostMapping("/addEvent")
     public ResponseEntity<Event> addEvent(@RequestBody Event event) {
+        event.setDateCreation(new Date());
+        event.setArchive(false);
+        event.setEtatEvent("Confirmer");
         Event e=eventRepository.save(event);
         return new ResponseEntity<>(e, OK);
     }
@@ -242,6 +246,6 @@ private UserRepository userRepository ;
        /* listEventFiltre=listEvent.stream()
                 .filter(e->e.getInvitedPersons().contains(user.getId()))
                 .collect(Collectors.toList());*/
-        return new ResponseEntity<>(listEventFiltre, OK);
-    }
+      /*  return new ResponseEntity<>(listEventFiltre, OK);
+    } */
 }

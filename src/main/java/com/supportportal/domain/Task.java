@@ -21,6 +21,7 @@ public class Task implements Serializable {
     private String etatTask;
     @ManyToOne(cascade = CascadeType.REFRESH)
     private User taskCreePar;
+
     @ManyToOne(cascade = CascadeType.REFRESH)
     private Sprint sprint ;
     @ManyToOne

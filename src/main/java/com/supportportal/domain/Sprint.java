@@ -19,7 +19,7 @@ public class Sprint implements Serializable {
     private Date dateFin;
     private String description;
     private String etatSprint;
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.REFRESH)
     private User sprintCreePar;//recupere user a partir instance projet
 
     //    @ManyToOne

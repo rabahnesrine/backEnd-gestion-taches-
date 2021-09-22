@@ -30,13 +30,13 @@ public class User implements Serializable {
     private String[] authorities;
     private boolean isActive;
     private boolean isNotLocked;
-    @OneToMany(mappedBy ="creePar" )
+    @OneToMany(mappedBy ="creePar",cascade = CascadeType.ALL )
     private List<Projet> projets;
 
     @OneToMany(mappedBy ="client" )
     private List<Projet> projetsClient;
 
-    @OneToMany(mappedBy ="sprintCreePar")
+    @OneToMany(mappedBy ="sprintCreePar",cascade = CascadeType.ALL )
     private List<Sprint> sprints;
     @OneToMany(mappedBy ="chefAffecter" )
     private List<Sprint> sprintsAffecter;
@@ -44,7 +44,7 @@ public class User implements Serializable {
     @OneToMany( mappedBy = "memberAffecter")
     private List<Task> tasksMember;
 
-    @OneToMany( mappedBy = "taskCreePar")
+    @OneToMany( mappedBy = "taskCreePar",cascade = CascadeType.ALL )
     private List<Task> tasksChef;
 
     @OneToMany(mappedBy ="sender" )
@@ -55,16 +55,17 @@ public class User implements Serializable {
 
 
 
-    @OneToMany( mappedBy = "userCom")
+    @OneToMany( mappedBy = "userCom",cascade = CascadeType.ALL )
     private List<Commentaire> userCom;
 
     @OneToMany(mappedBy ="docUser" ,cascade = CascadeType.ALL)
     private List<Document> documents;
-
+    @OneToMany(mappedBy ="eventUser" ,cascade = CascadeType.ALL)
+    private List<Event> events;
     public User(){}
 
     public User(Long id, String userId, String telephone,  String professionUser,
-            String username, String password, String email, String profileImageUrl, Date lastLoginDate, Date lastLoginDateDisplay, Date joinDate, String role, String[] authorities, boolean isActive, boolean isNotLocked, List<Projet> projets,List<Projet> projetsClient, List<Sprint> sprints, List<Sprint> sprintsAffecter ,List<Task> tasksMember ,List<Document> documents,List<Task> tasksChef,List<Commentaire> userCom,List<Msg> msgs,List<Msg> msgsRecu) {
+            String username, String password, String email, String profileImageUrl, Date lastLoginDate, Date lastLoginDateDisplay, Date joinDate, String role, String[] authorities, boolean isActive, boolean isNotLocked, List<Projet> projets,List<Projet> projetsClient, List<Sprint> sprints, List<Sprint> sprintsAffecter ,List<Task> tasksMember ,List<Document> documents, List<Event> events,List<Task> tasksChef,List<Commentaire> userCom,List<Msg> msgs,List<Msg> msgsRecu) {
         this.id = id;
         this.userId = userId;
     this.telephone=telephone;
@@ -90,6 +91,15 @@ public class User implements Serializable {
         this.msgsRecu=msgsRecu;
 this.projetsClient=projetsClient;
 this.documents=documents;
+this.events=events;
+    }
+
+    public List<Event> getEvents() {
+        return null;
+    }
+
+    public void setEvents(List<Event> events) {
+        this.events = events;
     }
 
     public List<Document> getDocuments() {

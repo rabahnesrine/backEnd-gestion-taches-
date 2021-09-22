@@ -18,7 +18,7 @@ public class Commentaire implements Serializable {
 
     @ManyToOne(cascade = CascadeType.REFRESH)
     private Task tacheCom;
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.REFRESH)
     private User userCom;
 
     public long getIdCommentaire() {

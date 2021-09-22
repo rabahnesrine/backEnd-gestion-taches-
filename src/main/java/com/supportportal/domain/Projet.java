@@ -27,7 +27,7 @@ public class Projet implements Serializable {
       /*  private boolean archiveProjet ;
 
 */
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.REFRESH)
     private User creePar;
     @ManyToOne
     private User client;
