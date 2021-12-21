@@ -69,6 +69,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
             LOGGER.error(NO_USER_FOUND_BY_USERNAME + username);
             throw new UsernameNotFoundException(NO_USER_FOUND_BY_USERNAME + username);
         } else {
+           validateLoginAttempt(user);
             user.setLastLoginDateDisplay(user.getLastLoginDate());
             user.setLastLoginDate(new Date());
             userRepository.save(user);
@@ -79,7 +80,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
     @Override
-    public User register( String username,String telephone ,String professionUser, String email) throws UserNotFoundException, UsernameExistException, EmailExistException {
+    public User register( String username,String telephone ,String professionUser, String email) throws UserNotFoundException, UsernameExistException, EmailExistException, MessagingException, IOException {
         validateNewUsernameAndEmail(EMPTY, username, email);
         User user = new User();
         user.setUserId(generateUserId());
@@ -92,17 +93,23 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         user.setJoinDate(new Date());
         user.setPassword(encodedPassword);
         user.setIsActive(true);
-        user.setIsNotLocked(true);
+        user.setIsNotLocked(false);
         user.setRole(ROLE_MEMBER.name());
         user.setAuthorities(ROLE_MEMBER.getAuthorities());
-        user.setProfileImageUrl(getTemporaryProfileImageUrl());
+        user.setProfileImageUrl(getTemporaryProfileImageUrl(username));
+        Path userFolder = Paths.get(FileConstant.USER_FOLDER +user.getUsername()).toAbsolutePath().normalize(); //user/home/supportportal/user/ness
+        if(!Files.exists(userFolder)){
+            Files.createDirectories(userFolder);
+            LOGGER.info(DIRECTORY_CREATED + userFolder);
+        }
         userRepository.save(user);
         LOGGER.info("New user password: " + password);
+        emailService.sendNewPasswordEmail(user.getUsername(),password,user.getEmail());
         return user;
     }
 
     @Override
-    public User addNewUser(String userName, String emailUser, String telephone, String professionUser, String roles, boolean isNotLocked, boolean isActive, MultipartFile profileImage) throws UserNotFoundException, UsernameExistException, EmailExistException, IOException, NotAnImageFileException {
+    public User addNewUser(String userName, String emailUser, String telephone, String professionUser, String roles, boolean isNotLocked, boolean isActive, MultipartFile profileImage) throws UserNotFoundException, UsernameExistException, EmailExistException, IOException, NotAnImageFileException, MessagingException {
         validateNewUsernameAndEmail(StringUtils.EMPTY,userName,emailUser);
         User user =new User();
         String password = generatePassword();
@@ -123,7 +130,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         userRepository.save(user);
         saveProfileImage(user,profileImage);
         LOGGER.info("New user password: " + password);
-
+        emailService.sendNewPasswordEmail(user.getUsername(),password,user.getEmail());
 
 
 
@@ -185,7 +192,6 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         user.setIsNotLocked(isNotLocked);
 
         user.setRole(getRoleEnumName(roles).name());
-
         user.setAuthorities(getRoleEnumName(roles).getAuthorities());
         saveProfileImage(user,profileImage);
         userRepository.save(user);
@@ -267,6 +273,57 @@ public class UserServiceImpl implements UserService, UserDetailsService {
             return null;
         }
     }
+
+
+public void validateLoginAttempt(User user)  {
+        //check si user compte verrouillé  isNOTlocked=false
+        if(user.getIsNotLocked()){
+            boolean maxAttemps=this.loginAttemptService.hasExceededMaxAttempts(user.getUsername());
+            LOGGER.info("valueattemps"+maxAttemps);
+            if(maxAttemps==true){
+                user.setIsNotLocked(false); //bloquée
+                LOGGER.info(user.getIsNotLocked()+"|||1|");
+
+            }else{
+                this.loginAttemptService.addUserToLoginAttemptCache(user.getUsername());
+                user.setIsNotLocked(true); //ouvert
+LOGGER.info(user.getIsNotLocked()+"|||2|");
+            }
+
+        }else{
+            loginAttemptService.evitUserFromLoginAttemptCache(user.getUsername()); //true :ouvert
+            LOGGER.info(user.getIsNotLocked()+"|||3|");
+
+        }
+    }
+
+
+/* plusieurs erreur ici
+
+    public void validateLoginAttempt(User user)  {
+        //check si user compte verrouillé  isNOTlocked=false
+        if(user.getIsNotLocked()==true){
+            if(loginAttemptService.hasExceededMaxAttempts(user.getUsername())){
+                user.setIsNotLocked(false);;//bloquée
+                userRepository.update(user);
+                LOGGER.info("||||| Bloque user"+user.getUsername()+user.getIsNotLocked());
+            }else{
+                loginAttemptService.addUserToLoginAttemptCache(user.getUsername());
+
+                user.setIsNotLocked(true); //ouvert
+                userRepository.update(user);
+
+                LOGGER.info("||||| attemps<5 user"+user.getUsername()+user.getIsNotLocked());
+
+            }
+
+        }else {
+            loginAttemptService.evitUserFromLoginAttemptCache(user.getUsername()); //true :ouvert
+            LOGGER.info("||||| ouvrir session user"+user.getUsername()+user.getIsNotLocked());
+
+        }
+    }*/
+
     private Role getRoleEnumName(String role) {
         return Role.valueOf(role.toUpperCase());
     }
@@ -278,7 +335,6 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         private String getTemporaryProfileImageUrl(String userName) {
             return ServletUriComponentsBuilder.fromCurrentContextPath().path(FileConstant.DEFAULT_USER_IMAGE_PATH+ userName).toUriString() ;
         }
-
 
 
 

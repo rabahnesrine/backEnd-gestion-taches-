@@ -24,11 +24,20 @@ private UserRepository userRepository;
 
         User findUser= new User();
         findUser=userRepository.findUserById(id);
+        /* return this.eventRepository.findEventByEventUser(findUser);*/
+       return this.eventRepository.findEventByEventUserIdAndArchiveFalse(findUser.getId());
 
-        return this.eventRepository.findEventByEventUser(findUser);
     }
 
 
+    @Override
+    public List<Event> findEventArchiveByEventUser(Long id) {
+
+        User findUser= new User();
+        findUser=userRepository.findUserById(id);
+
+        return this.eventRepository.findEventByArchiveTrueAndByEventUser(findUser.getId());
+    }
 
 
 

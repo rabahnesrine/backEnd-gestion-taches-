@@ -6,8 +6,11 @@ import com.supportportal.exception.domain.*;
 import com.supportportal.repository.CalendrierRepository;
 import com.supportportal.repository.UserRepository;
 import com.supportportal.repository.eventRepository;
+import com.supportportal.service.LoginAttemptService;
 import com.supportportal.service.UserService;
 import com.supportportal.utility.JWTTokenProvider;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.core.support.EventPublishingRepositoryProxyPostProcessor;
 import org.springframework.http.HttpHeaders;
@@ -54,11 +57,15 @@ public class UserResource extends ExceptionHandling {
 
     @Autowired
 private UserRepository userRepository ;
+    private Logger LOGGER = LoggerFactory.getLogger(getClass());
+
+    private LoginAttemptService loginAttemptService;
     @Autowired
-    public UserResource(AuthenticationManager authenticationManager, UserService userService, JWTTokenProvider jwtTokenProvider) {
+    public UserResource(AuthenticationManager authenticationManager, UserService userService, JWTTokenProvider jwtTokenProvider,LoginAttemptService loginAttemptService) {
         this.authenticationManager = authenticationManager;
         this.userService = userService;
         this.jwtTokenProvider = jwtTokenProvider;
+        this.loginAttemptService=loginAttemptService;
     }
 
     @PostMapping("/login")
@@ -70,8 +77,10 @@ private UserRepository userRepository ;
         return new ResponseEntity<>(loginUser, jwtHeader, OK);
     }
 
+
+
     @PostMapping("/register")
-    public ResponseEntity<User> register(@RequestBody User user) throws UserNotFoundException, UsernameExistException, EmailExistException {
+    public ResponseEntity<User> register(@RequestBody User user) throws UserNotFoundException, UsernameExistException, EmailExistException, MessagingException, IOException {
         User newUser = userService.register(user.getUsername(),user.getTelephone(),user.getProfessionUser(), user.getEmail());
         return new ResponseEntity<>(newUser, OK);
     }
@@ -85,7 +94,7 @@ private UserRepository userRepository ;
                                            @RequestParam("role") String role,
                                            @RequestParam("isNotLocked") String isNotLocked,
                                            @RequestParam("isActive")String isActive,
-                                           @RequestParam( value = "profileImage",required = false) MultipartFile profileImage ) throws UserNotFoundException, UsernameExistException, EmailExistException, IOException, NotAnImageFileException {
+                                           @RequestParam( value = "profileImage",required = false) MultipartFile profileImage ) throws UserNotFoundException, UsernameExistException, EmailExistException, IOException, NotAnImageFileException, MessagingException {
         User newUser=userService.addNewUser(username,email,telephone,professionUser,role,Boolean.parseBoolean(isNotLocked),Boolean.parseBoolean(isActive),profileImage);
         return new ResponseEntity<>(newUser,OK);
     }
@@ -203,6 +212,7 @@ private UserRepository userRepository ;
     }
 
     private void authenticate(String username, String password) {
+
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
     }
 

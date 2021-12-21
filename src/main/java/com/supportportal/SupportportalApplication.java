@@ -8,12 +8,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.web.servlet.MultipartConfigFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.util.unit.DataSize;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
 
+import javax.servlet.MultipartConfigElement;
 import java.io.File;
 import java.util.Arrays;
 import java.util.Collections;
@@ -34,7 +37,7 @@ public class SupportportalApplication implements CommandLineRunner {
 	@Bean
 	public CorsFilter corsFilter(){
 		UrlBasedCorsConfigurationSource urlBasedCorsConfigurationSource= new UrlBasedCorsConfigurationSource();
-		CorsConfiguration corsConfiguration = new CorsConfiguration();
+		CorsConfiguration corsConfiguration = new CorsConfiguration();//Construct a new CorsConfiguration instance with no cross-origin requests allowed for any origin by default.
 		corsConfiguration.setAllowCredentials(true);
 		corsConfiguration.setAllowedOrigins(Collections.singletonList("http://localhost:4200"));
 		corsConfiguration.setAllowedHeaders(Arrays.asList("Origin","Access-Control-Allow-Origin","Content-Type","Content-Disposition",
@@ -51,5 +54,14 @@ public class SupportportalApplication implements CommandLineRunner {
 	@Bean
 	public BCryptPasswordEncoder bCryptPasswordEncoder() {
 		return new BCryptPasswordEncoder();
+	}
+
+
+	@Bean
+	public MultipartConfigElement multipartConfigElement() {
+		MultipartConfigFactory factory = new MultipartConfigFactory();
+		factory.setMaxFileSize(DataSize.parse("1000MB"));
+		factory.setMaxRequestSize(DataSize.parse("1000MB"));
+		return factory.createMultipartConfig();
 	}
 }

@@ -2,6 +2,9 @@ package com.supportportal.constant;
 
 public class FileConstant {
     public static final String USER_IMAGE_PATH="/user/image/";
+    public static final String USER_VIDEO_PATH="/video/vediosh/";
+    public static final String MP4_EXTENSION="mp4";
+
     public static final String JPG_EXTENSION="jpg";
     public static final String USER_FOLDER=System.getProperty("user.home")+"/supportportal/user/";// a chaque fois l'app run va etre cree
     public static final String FILE_PATH = System.getProperty("user.home")+"/supportportal/";

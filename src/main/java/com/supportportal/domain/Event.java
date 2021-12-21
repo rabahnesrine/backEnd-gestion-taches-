@@ -24,6 +24,7 @@ public class Event implements Serializable {
     private boolean archive;
     private String etatEvent;
     private Date dateCreation;
+    private Date dateModification;
     private String timeEvent;
     private String categorie;
     private String lieu;
@@ -32,7 +33,7 @@ public class Event implements Serializable {
     public Event() {
     }
 
-    public Event(long id, String subject, String description, List<Long> invitedPersons, Date startDate, Date endDate, User eventUser, boolean archive, String etatEvent, Date dateCreation, String timeEvent, String categorie, String lieu) {
+    public Event(long id, String subject, String description, List<Long> invitedPersons, Date startDate, Date endDate, User eventUser, boolean archive, String etatEvent, Date dateCreation, Date dateModification,String timeEvent, String categorie, String lieu) {
         this.id = id;
         this.subject = subject;
         this.description = description;
@@ -43,9 +44,18 @@ public class Event implements Serializable {
         this.archive = archive;
         this.etatEvent = etatEvent;
         this.dateCreation = dateCreation;
+        this.dateModification=dateModification;
         this.timeEvent = timeEvent;
         this.categorie = categorie;
         this.lieu = lieu;
+    }
+
+    public Date getDateModification() {
+        return this.dateModification;
+    }
+
+    public void setDateModification(Date dateModification) {
+        this.dateModification = dateModification;
     }
 
     public Date getStartDate() {

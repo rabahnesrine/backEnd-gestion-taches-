@@ -10,10 +10,10 @@ import java.util.List;
 
 public interface UserService {
 
-    User register( String username,String telephone ,String professionUser, String email) throws UserNotFoundException, UsernameExistException, EmailExistException;
+    User register( String username,String telephone ,String professionUser, String email) throws UserNotFoundException, UsernameExistException, EmailExistException, MessagingException, IOException;
 
     List<User> getUsers();
-    User addNewUser(String nomUser, String emailUser, String telephone, String professionUser, String roles, boolean isNotLocked, boolean isActive, MultipartFile profileImage) throws UserNotFoundException, UsernameExistException, EmailExistException, IOException, NotAnImageFileException;
+    User addNewUser(String nomUser, String emailUser, String telephone, String professionUser, String roles, boolean isNotLocked, boolean isActive, MultipartFile profileImage) throws UserNotFoundException, UsernameExistException, EmailExistException, IOException, NotAnImageFileException, MessagingException;
 
     User findUserByUsername(String username);
 
@@ -25,7 +25,6 @@ public interface UserService {
     void deleteUser(String username) throws IOException;
     void resetPassword(String email) throws EmailNotFoundException, MessagingException;
     User updateProfileImage(String nomUser, MultipartFile profileImage) throws UserNotFoundException, UsernameExistException, EmailExistException, IOException, NotAnImageFileException;
-
 
 
 }
